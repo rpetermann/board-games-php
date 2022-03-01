@@ -1,0 +1,53 @@
+version: '3.5'
+
+services:
+    board_games_php:
+        container_name: board-games-php
+        image: php:7.4-fpm
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        ports:
+            - "80"
+        networks:
+            boardgamesnetwork:
+                aliases:
+                    - local-board-games.com
+                ipv4_address: 172.33.0.11
+        volumes:
+            - ../app:/var/www/app
+        working_dir: /var/www/app
+        environment:
+            XDEBUG_MODE: coverage
+    board_games_mysql:
+        container_name: board-games-mysql
+        image: "mysql:5.7"
+        ports:
+            - "3306"
+        networks:
+            boardgamesnetwork:
+                aliases:
+                    - local-db-board-games.com
+                ipv4_address: 172.33.0.61
+        volumes:
+            - mysqlvolume:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: game
+            MYSQL_PASSWORD: root
+    board_games_php_nginx:
+        image: nginx:latest
+        container_name: board-games-php-nginx
+        ports:
+            - "80:80"
+        networks:
+            boardgamesnetwork:
+                aliases:
+                    - local-php-nginx-board-games.com
+                ipv4_address: 172.33.0.111
+networks:
+    boardgamesnetwork:
+        external: true
+volumes:
+    mysqlvolume:
+        driver: local

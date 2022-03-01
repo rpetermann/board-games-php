@@ -1,0 +1,34 @@
+ping:
+   path: /ping
+   methods: [GET]
+   defaults: { _controller: 'App\Controller\HealthCheckController::ping' }
+
+create_game:
+   path: /v1/game
+   methods: [POST]
+   defaults: { _controller: 'App\Controller\GameController::create' }
+
+add_player_in_game:
+   path: /v1/game/{gameId}/player
+   methods: [POST]
+   defaults: { _controller: 'App\Controller\GameController::addPlayer' }
+
+start_game:
+   path: /v1/game/{gameId}/start
+   methods: [POST]
+   defaults: { _controller: 'App\Controller\GameController::start' }
+
+move_piece:
+   path: /v1/game/{gameId}/player/{playerId}/piece/{pieceId}/move_piece
+   methods: [POST]
+   defaults: { _controller: 'App\Controller\GameController::movePiece' }
+
+read_game:
+   path: /v1/game/{gameId}
+   methods: [GET]
+   defaults: { _controller: 'App\Controller\GameController::read' }
+
+read_allowed_piece_moves:
+   path: /v1/game/{gameId}/player/{playerId}/piece/{pieceId}/allowed_moves
+   methods: [GET]
+   defaults: { _controller: 'App\Controller\GameController::readAllowedPieceMoves' }

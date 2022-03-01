@@ -1,0 +1,44 @@
+#!/bin/sh
+
+PROJECT=`php -r "echo dirname(dirname(dirname(realpath('$0'))));"`
+STAGED_FILES_CMD=`git diff --cached --name-only --diff-filter=ACMR HEAD $PROJECT/src/ | grep \\\\.php`
+
+# Determine if a file list is passed
+if [ "$#" -eq 1 ]
+then
+	oIFS=$IFS
+	IFS='
+	'
+	SFILES="$1"
+	IFS=$oIFS
+fi
+SFILES=${SFILES:-$STAGED_FILES_CMD}
+
+echo "\n Checking PHP Lint... \n"
+for FILE in $SFILES
+do
+	php -l -d display_errors=0 $PROJECT/$FILE
+	if [ $? != 0 ]
+	then
+		echo "Fix the SYNTAX ERROR before commit."
+		exit 1
+	fi
+	FILES="$FILES $PROJECT/$FILE"
+done
+
+if [ "$FILES" != "" ]
+then
+  	phpcscmd="$PROJECT/vendor/bin/phpcs $PROJECT/src/ --ignore=$PROJECT/src/Kernel.php,$PROJECT/src/Migrations/*,$PROJECT/src/Tests/_reports* --standard=Symfony --exclude=Symfony.Commenting.License,Symfony.Commenting.Annotations --encoding=utf-8 -n --colors"
+
+	echo "\n---------------------- \n\nRunning Code Sniffer..."
+
+	$phpcscmd
+
+	if [ $? != 0 ]
+	then
+		echo "Errors were found. Please fix them before commit."
+		exit 1
+	fi
+fi
+
+exit 0

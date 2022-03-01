@@ -1,0 +1,58 @@
+framework:
+    workflows:
+        game:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'state'
+            support: App\Entity\Game
+            initial_marking: creating
+            places:
+                - creating
+                - waiting_players
+                - waiting_start
+                - playing
+                - finished
+            transitions:
+                send_to_waiting_players:
+                    from: creating
+                    to: waiting_players
+                send_to_waiting_start:
+                    from: waiting_players
+                    to: waiting_start
+                send_to_playing:
+                    from: waiting_start
+                    to: playing
+                send_to_finished:
+                    from: playing
+                    to: finished
+        player:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'state'
+            support: App\Entity\Player
+            initial_marking: creating
+            places:
+                - creating
+                - waiting_start
+                - waiting_play
+                - waiting_opponent_play
+                - won
+                - lost
+            transitions:
+                send_to_waiting_start:
+                    from: creating
+                    to: waiting_start
+                send_to_waiting_play:
+                    from: [ waiting_start, waiting_opponent_play ]
+                    to: waiting_play
+                send_to_waiting_opponent_play:
+                    from: [ waiting_play, waiting_start ]
+                    to: waiting_opponent_play
+                send_to_won:
+                    from: [ waiting_play, waiting_opponent_play ]
+                    to: won
+                send_to_lost:
+                    from: [ waiting_play, waiting_opponent_play ]
+                    to: lost
