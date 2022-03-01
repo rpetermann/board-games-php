@@ -47,7 +47,9 @@ class GameAddPlayerModelTest extends AbstractWebTestCase
             'name' => 'Player 2',
         ];
 
-        $this->sendRequest('POST', $this->getAddPlayerRoute($game->getId()), $payload);
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
+        $this->sendRequest('POST', $this->getAddPlayerRoute($game->getId()), $payload, $headers);
         $this->assertResponseIsSuccessful();
 
         $response = $this->getJsonResponse();
@@ -79,10 +81,52 @@ class GameAddPlayerModelTest extends AbstractWebTestCase
             'name' => 'Player 3',
         ];
 
-        $this->sendRequest('POST', $this->getAddPlayerRoute($game->getId()), $payload);
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
+        $this->sendRequest('POST', $this->getAddPlayerRoute($game->getId()), $payload, $headers);
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response = $this->getJsonResponse();
         $this->assertSame(GameException::TYPE_GAME_REACHED_MAXIMUM_NUMBER_OF_PLAYERS, $response->message);
+    }
+
+    /**
+     * testFailureAddPlayerUsingInvalidToken
+     *
+     * @return void
+     */
+    public function testFailureAddPlayerUsingInvalidToken(): void
+    {
+        $game = $this->createCheckersGameMockWith1Player();
+        $this->save($game);
+
+        $payload = [
+            'name' => 'Player 2',
+        ];
+
+        $headers = $this->getAccessTokenHeader('invalidToken');
+
+        $this->sendRequest('POST', $this->getAddPlayerRoute($game->getId()), $payload, $headers);
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        $response = $this->getJsonResponse();
+        $this->assertSame(GameException::TYPE_GAME_NOT_FOUND, $response->message);
+    }
+
+    /**
+     * testFailureAddPlayerUsingInvalidToken
+     *
+     * @return void
+     */
+    public function testFailureAddPlayerWithoutToken(): void
+    {
+        $game = $this->createCheckersGameMockWith1Player();
+        $this->save($game);
+
+        $payload = [
+            'name' => 'Player 2',
+        ];
+
+        $this->sendRequest('POST', $this->getAddPlayerRoute($game->getId()), $payload);
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     /**

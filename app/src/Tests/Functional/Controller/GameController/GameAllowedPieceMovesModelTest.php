@@ -2,7 +2,10 @@
 
 namespace App\Tests\Functional\Controller\GameController;
 
+use App\Exception\GameException;
+use App\Exception\PieceException;
 use App\Tests\Functional\AbstractWebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * GameAllowedPieceMovesModelTest
@@ -58,14 +61,63 @@ class GameAllowedPieceMovesModelTest extends AbstractWebTestCase
         $piece = $player->getPieces()[$pieceIdx];
         $this->save($game);
 
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
         $this->sendRequest(
             'GET',
-            $this->getAllowedPieceMovesRoute($game->getId(), $player->getId(), $piece->getId())
+            $this->getAllowedPieceMovesRoute($game->getId(), $player->getId(), $piece->getId()),
+            [],
+            $headers,
         );
         $this->assertResponseIsSuccessful();
 
         $response = json_decode(json_encode($this->getJsonResponse()), true);
         $this->assertEquals($expectedResponse, $response);
+    }
+
+    /**
+     * testFailureGetAllowedPieceMovesUsingInvalidToken
+     *
+     * @return void
+     */
+    public function testFailureGetAllowedPieceMovesUsingInvalidToken(): void
+    {
+        $game = $this->createCheckersGameMockWith2Players();
+        $player = $game->getPlayer()[0];
+        $piece = $player->getPieces()[0];
+        $this->save($game);
+
+        $headers = $this->getAccessTokenHeader('imAnInvalidToken');
+
+        $this->sendRequest(
+            'GET',
+            $this->getAllowedPieceMovesRoute($game->getId(), $player->getId(), $piece->getId()),
+            [],
+            $headers,
+        );
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        $response = $this->getJsonResponse();
+        $this->assertSame(PieceException::TYPE_PIECE_NOT_FOUND, $response->message);
+    }
+
+    /**
+     * testFailureGetAllowedPieceMovesWithoutToken
+     *
+     * @return void
+     */
+    public function testFailureGetAllowedPieceMovesWithoutToken(): void
+    {
+        $game = $this->createCheckersGameMockWith2Players();
+        $player = $game->getPlayer()[0];
+        $piece = $player->getPieces()[0];
+        $this->save($game);
+
+        $this->sendRequest(
+            'GET',
+            $this->getAllowedPieceMovesRoute($game->getId(), $player->getId(), $piece->getId()),
+        );
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     /**
