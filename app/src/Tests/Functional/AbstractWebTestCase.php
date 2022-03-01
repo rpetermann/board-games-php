@@ -97,6 +97,19 @@ abstract class AbstractWebTestCase extends WebTestCase
     }
 
     /**
+     * getAccessTokenHeader
+     *
+     * @param string $accessToken
+     * @return array
+     */
+    protected function getAccessTokenHeader(string $accessToken): array
+    {
+        return [
+            'HTTP_ACCESS-TOKEN' => $accessToken,
+        ];
+    }
+
+    /**
      * getDefaultHeaders
      *
      * @return array

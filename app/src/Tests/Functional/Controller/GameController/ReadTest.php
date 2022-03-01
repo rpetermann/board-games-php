@@ -40,7 +40,9 @@ class ReadTest extends AbstractWebTestCase
     {
         $this->save($game);
 
-        $this->sendRequest('GET', $this->getReadGameRoute($game->getId()));
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
+        $this->sendRequest('GET', $this->getReadGameRoute($game->getId()), [], $headers);
         
         $this->assertResponseStatusCodeSame(Response::HTTP_OK);
         $response = $this->getJsonResponse();
@@ -49,34 +51,38 @@ class ReadTest extends AbstractWebTestCase
         $this->assertNull($response->accessToken ?? null);
     }
 
-    public function dataProviderFailureRead(): array
+    /**
+     * testFailureReadUsingInvalidToken
+     *
+     * @return void
+     */
+    public function testFailureReadUsingInvalidToken(): void
     {
-        return [
-            'game not found' => [
-                'gameId' => '56450b7d-330d-444e-8d66-e07e198c2b8e',
-                'expectedResponse' => GameException::TYPE_GAME_NOT_FOUND,
-                'expectedStatusCode' => Response::HTTP_NOT_FOUND,
-            ],
-        ];
+        $game = $this->createCheckersGameMockWith2Players();
+        $this->save($game);
+
+        $headers = $this->getAccessTokenHeader('imAnInvalidToken');
+
+        $this->sendRequest('GET', $this->getReadGameRoute($game->getId()), [], $headers);
+        
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        $response = $this->getJsonResponse();
+        $this->assertSame(GameException::TYPE_GAME_NOT_FOUND, $response->message);
     }
 
     /**
-     * testFailureRead
-     * 
-     * @dataProvider dataProviderFailureRead
+     * testFailureReadWithoutToken
      *
-     * @param string  $gameId
-     * @param string  $expectedResponse
-     * @param int     $expectedStatusCode
      * @return void
      */
-    public function testFailureRead(string $gameId, string $expectedResponse, int $expectedStatusCode): void
+    public function testFailureReadWithoutToken(): void
     {
-        $this->sendRequest('GET', $this->getReadGameRoute($gameId));
+        $game = $this->createCheckersGameMockWith2Players();
+        $this->save($game);
 
-        $this->assertResponseStatusCodeSame($expectedStatusCode);
-        $response = $this->getJsonResponse();
-        $this->assertSame(GameException::TYPE_GAME_NOT_FOUND, $response->message);
+        $this->sendRequest('GET', $this->getReadGameRoute($game->getId()));
+        
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     /**

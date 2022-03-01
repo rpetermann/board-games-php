@@ -73,10 +73,13 @@ class GameMovePieceModelTest extends AbstractWebTestCase
 
         $countOpponentPiecesBeforeMovePiece = $this->countPlayersPieces(...$opponents);
 
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
         $this->sendRequest(
             'POST',
             $this->getMovePieceRoute($game->getId(), $player->getId(), $piece->getId()),
-            $payload
+            $payload,
+            $headers,
         );
         $this->assertResponseIsSuccessful();
 
@@ -133,10 +136,13 @@ class GameMovePieceModelTest extends AbstractWebTestCase
 
         $countOpponentPiecesBeforeMovePiece = $this->countPlayersPieces(...$opponents);
 
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
         $this->sendRequest(
             'POST',
             $this->getMovePieceRoute($game->getId(), $player->getId(), $piece->getId()),
-            $payload
+            $payload,
+            $headers,
         );
         $this->assertResponseIsSuccessful();
 
@@ -197,10 +203,13 @@ class GameMovePieceModelTest extends AbstractWebTestCase
 
         $countOpponentPiecesBeforeMovePiece = $this->countPlayersPieces(...$opponents);
 
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
         $this->sendRequest(
             'POST',
             $this->getMovePieceRoute($game->getId(), $player->getId(), $piece->getId()),
-            $payload
+            $payload,
+            $headers,
         );
         $this->assertResponseIsSuccessful();
 
@@ -235,11 +244,15 @@ class GameMovePieceModelTest extends AbstractWebTestCase
             'toY' => 1,
         ];
 
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
         $this->sendRequest(
             'POST',
             $this->getMovePieceRoute($game->getId(), $player1->getId(), 'mocknonexistentpiece'),
-            $payload
+            $payload,
+            $headers,
         );
+
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         $response = $this->getJsonResponse();
         $this->assertSame(PieceException::TYPE_PIECE_NOT_FOUND, $response->message);
@@ -262,11 +275,15 @@ class GameMovePieceModelTest extends AbstractWebTestCase
             'toY' => 1,
         ];
 
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
         $this->sendRequest(
             'POST',
             $this->getMovePieceRoute('mockothergameid', $player1->getId(), $piece->getId()),
-            $payload
+            $payload,
+            $headers,
         );
+
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         $response = $this->getJsonResponse();
         $this->assertSame(PieceException::TYPE_PIECE_NOT_FOUND, $response->message);
@@ -291,11 +308,15 @@ class GameMovePieceModelTest extends AbstractWebTestCase
             'toY' => 1,
         ];
 
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
         $this->sendRequest(
             'POST',
             $this->getMovePieceRoute($game->getId(), $player2->getId(), $player1Piece->getId()),
-            $payload
+            $payload,
+            $headers
         );
+
         $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
         $response = $this->getJsonResponse();
         $this->assertSame(PieceException::TYPE_PIECE_NOT_FOUND, $response->message);
@@ -318,11 +339,15 @@ class GameMovePieceModelTest extends AbstractWebTestCase
             'toY' => 1,
         ];
 
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
         $this->sendRequest(
             'POST',
             $this->getMovePieceRoute($game->getId(), $player->getId(), $piece->getId()),
-            $payload
+            $payload,
+            $headers,
         );
+
         $this->assertResponseStatusCodeSame(Response::HTTP_BAD_REQUEST);
         $response = $this->getJsonResponse();
         $this->assertSame(PlayerException::TYPE_IS_NOT_PLAYER_TURN, $response->message);
@@ -368,14 +393,77 @@ class GameMovePieceModelTest extends AbstractWebTestCase
         $piece = $player->getPieces()->first();
         $this->save($game);
 
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
         $this->sendRequest(
             'POST',
             $this->getMovePieceRoute($game->getId(), $player->getId(), $piece->getId()),
-            $payload
+            $payload,
+            $headers,
         );
+
         $this->assertResponseStatusCodeSame(Response::HTTP_UNPROCESSABLE_ENTITY);
         $response = $this->getJsonResponse();
         $this->assertSame(GameException::TYPE_INVALID_PAYLOAD, $response->message);
+    }
+
+    /**
+     * testFailureMovePieceUsingInvalidPayload
+     *
+     * @param array $payload
+     * @return void
+     */
+    public function testFailureMovePieceUsingInvalidToken(): void
+    {
+        $game = $this->createCheckersGameMockWith2Players();
+        $player = $game->getPlayer()[1];
+        $piece = $player->getPieces()->first();
+        $this->save($game);
+
+        $payload = [
+            'toX' => 1,
+            'toY' => 1,
+        ];
+
+        $headers = $this->getAccessTokenHeader('invalidTokenMock');
+
+        $this->sendRequest(
+            'POST',
+            $this->getMovePieceRoute($game->getId(), $player->getId(), $piece->getId()),
+            $payload,
+            $headers,
+        );
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        $response = $this->getJsonResponse();
+        $this->assertSame(PieceException::TYPE_PIECE_NOT_FOUND, $response->message);
+    }
+
+    /**
+     * testFailureMovePieceWithoutToken
+     *
+     * @param array $payload
+     * @return void
+     */
+    public function testFailureMovePieceWithoutToken(): void
+    {
+        $game = $this->createCheckersGameMockWith2Players();
+        $player = $game->getPlayer()[1];
+        $piece = $player->getPieces()->first();
+        $this->save($game);
+
+        $payload = [
+            'toX' => 1,
+            'toY' => 1,
+        ];
+
+        $this->sendRequest(
+            'POST',
+            $this->getMovePieceRoute($game->getId(), $player->getId(), $piece->getId()),
+            $payload,
+        );
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     /**

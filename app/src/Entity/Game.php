@@ -18,7 +18,7 @@ use Symfony\Component\Uid\Uuid;
  * @ORM\HasLifecycleCallbacks()
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
-class Game extends AbstractEntity implements WorkflowableInterface
+class Game extends AbstractEntity implements WorkflowableInterface, TokenInterface
 {
     use StateTrait;
     use CrudDatetimeTrait;

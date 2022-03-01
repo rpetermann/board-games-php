@@ -4,8 +4,10 @@ namespace App\Tests\Functional\Controller\GameController;
 
 use App\Entity\Player;
 use App\Entity\Game;
+use App\Exception\GameException;
 use App\Repository\GameRepository;
 use App\Tests\Functional\AbstractWebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * GameStartModelTest
@@ -41,7 +43,9 @@ class GameStartModelTest extends AbstractWebTestCase
         $game = $this->createCheckersGameMockWith2PlayersWaitingStart();
         $this->save($game);
 
-        $this->sendRequest('POST', $this->getStartGameRoute($game->getId()));
+        $headers = $this->getAccessTokenHeader($game->getAccessToken());
+
+        $this->sendRequest('POST', $this->getStartGameRoute($game->getId()), [], $headers);
         $this->assertResponseIsSuccessful();
 
         $response = $this->getJsonResponse();
@@ -65,6 +69,38 @@ class GameStartModelTest extends AbstractWebTestCase
         }
         $this->assertCount(2, $game->getPlayer());
         $this->assertNotNull($this->gameRepository->findById($game->getId()));
+    }
+
+    /**
+     * testFailureStartGameUsingInvalidToken
+     *
+     * @return void
+     */
+    public function testFailureStartGameUsingInvalidToken(): void
+    {
+        $game = $this->createCheckersGameMockWith2PlayersWaitingStart();
+        $this->save($game);
+
+        $headers = $this->getAccessTokenHeader('test123');
+
+        $this->sendRequest('POST', $this->getStartGameRoute($game->getId()), [], $headers);
+        $this->assertResponseStatusCodeSame(Response::HTTP_NOT_FOUND);
+        $response = $this->getJsonResponse();
+        $this->assertSame(GameException::TYPE_GAME_NOT_FOUND, $response->message);
+    }
+
+    /**
+     * testFailureStartGameWithoutToken
+     *
+     * @return void
+     */
+    public function testFailureStartGameWithoutToken(): void
+    {
+        $game = $this->createCheckersGameMockWith2PlayersWaitingStart();
+        $this->save($game);
+
+        $this->sendRequest('POST', $this->getStartGameRoute($game->getId()));
+        $this->assertResponseStatusCodeSame(Response::HTTP_FORBIDDEN);
     }
 
     /**
