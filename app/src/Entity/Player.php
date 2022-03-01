@@ -26,14 +26,14 @@ class Player extends AbstractEntity implements WorkflowableInterface
     const STATE_WAITING_START = 'waiting_start';
     const STATE_WAITING_PLAY = 'waiting_play';
     const STATE_WAITING_OPPONENT_PLAY = 'waiting_opponent_play';
-    const STATE_WON = 'won';
-    const STATE_LOST = 'lost';
+    const STATE_WINNER = 'winner';
+    const STATE_DEFEATED = 'defeated';
 
     const TRANSITION_WAITING_START = 'send_to_waiting_start';
     const TRANSITION_WAITING_PLAY = 'send_to_waiting_play';
     const TRANSITION_WAITING_OPPONENT_PLAY = 'send_to_waiting_opponent_play';
-    const TRANSITION_WON = 'send_to_won';
-    const TRANSITION_LOST = 'send_to_lost';
+    const TRANSITION_WINNER = 'send_to_winner';
+    const TRANSITION_DEFEATED = 'send_to_defeated';
 
     /**
      * @ORM\Id

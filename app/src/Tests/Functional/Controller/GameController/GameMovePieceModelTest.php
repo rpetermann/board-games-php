@@ -151,9 +151,9 @@ class GameMovePieceModelTest extends AbstractWebTestCase
         $this->assertNull($response->accessToken ?? null);
 
         $this->assertSame(Game::STATE_FINISHED, $game->getState());
-        $this->assertSame(Player::STATE_WON, $player->getState());
+        $this->assertSame(Player::STATE_WINNER, $player->getState());
         foreach ($opponents as $opponent) {
-            $this->assertSame(Player::STATE_LOST, $opponent->getState());
+            $this->assertSame(Player::STATE_DEFEATED, $opponent->getState());
             $this->assertNull($opponent->getPieceByPosition($payload['toX'], $payload['toY']));
 
             $countOpponentPieceAfterMove = $countOpponentPiecesBeforeMovePiece[$opponent->getId()] - 1;

@@ -63,25 +63,25 @@ class PlayerWorkflowTest extends AbstractWebTestCase
                 'to' => Player::TRANSITION_WAITING_PLAY,
                 'expectedState' => Player::STATE_WAITING_PLAY,
             ],
-            'from waiting_play to won' => [
+            'from waiting_play to winner' => [
                 'from' => Player::STATE_WAITING_PLAY,
-                'to' => Player::TRANSITION_WON,
-                'expectedState' => Player::STATE_WON,
+                'to' => Player::TRANSITION_WINNER,
+                'expectedState' => Player::STATE_WINNER,
             ],
-            'from waiting_play to lost' => [
+            'from waiting_play to defeated' => [
                 'from' => Player::STATE_WAITING_PLAY,
-                'to' => Player::TRANSITION_LOST,
-                'expectedState' => Player::STATE_LOST,
+                'to' => Player::TRANSITION_DEFEATED,
+                'expectedState' => Player::STATE_DEFEATED,
             ],
-            'from waiting_opponent_play to won' => [
+            'from waiting_opponent_play to winner' => [
                 'from' => Player::STATE_WAITING_OPPONENT_PLAY,
-                'to' => Player::TRANSITION_WON,
-                'expectedState' => Player::STATE_WON,
+                'to' => Player::TRANSITION_WINNER,
+                'expectedState' => Player::STATE_WINNER,
             ],
-            'from waiting_opponent_play to lost' => [
+            'from waiting_opponent_play to defeated' => [
                 'from' => Player::STATE_WAITING_OPPONENT_PLAY,
-                'to' => Player::TRANSITION_LOST,
-                'expectedState' => Player::STATE_LOST,
+                'to' => Player::TRANSITION_DEFEATED,
+                'expectedState' => Player::STATE_DEFEATED,
             ],
         ];
     }
@@ -127,41 +127,41 @@ class PlayerWorkflowTest extends AbstractWebTestCase
                 'expectedState' => Player::STATE_CREATING,
                 'expectedExceptionMessage' => 'Transition "send_to_waiting_opponent_play" cannot be applied from state "creating"',
             ],
-            'from creating to won' => [
+            'from creating to winner' => [
                 'from' => Player::STATE_CREATING,
-                'to' => Player::TRANSITION_WON,
+                'to' => Player::TRANSITION_WINNER,
                 'expectedState' => Player::STATE_CREATING,
-                'expectedExceptionMessage' => 'Transition "send_to_won" cannot be applied from state "creating"',
+                'expectedExceptionMessage' => 'Transition "send_to_winner" cannot be applied from state "creating"',
             ],
-            'from creating to lost' => [
+            'from creating to defeated' => [
                 'from' => Player::STATE_CREATING,
-                'to' => Player::TRANSITION_LOST,
+                'to' => Player::TRANSITION_DEFEATED,
                 'expectedState' => Player::STATE_CREATING,
-                'expectedExceptionMessage' => 'Transition "send_to_lost" cannot be applied from state "creating"',
+                'expectedExceptionMessage' => 'Transition "send_to_defeated" cannot be applied from state "creating"',
             ],
-            'from waiting_start to won' => [
+            'from waiting_start to winner' => [
                 'from' => Player::STATE_WAITING_START,
-                'to' => Player::TRANSITION_WON,
+                'to' => Player::TRANSITION_WINNER,
                 'expectedState' => Player::STATE_WAITING_START,
-                'expectedExceptionMessage' => 'Transition "send_to_won" cannot be applied from state "waiting_start"',
+                'expectedExceptionMessage' => 'Transition "send_to_winner" cannot be applied from state "waiting_start"',
             ],
-            'from waiting_start to lost' => [
+            'from waiting_start to defeated' => [
                 'from' => Player::STATE_WAITING_START,
-                'to' => Player::TRANSITION_LOST,
+                'to' => Player::TRANSITION_DEFEATED,
                 'expectedState' => Player::STATE_WAITING_START,
-                'expectedExceptionMessage' => 'Transition "send_to_lost" cannot be applied from state "waiting_start"',
+                'expectedExceptionMessage' => 'Transition "send_to_defeated" cannot be applied from state "waiting_start"',
             ],
-            'from won to lost' => [
-                'from' => Player::STATE_WON,
-                'to' => Player::TRANSITION_LOST,
-                'expectedState' => Player::STATE_WON,
-                'expectedExceptionMessage' => 'Transition "send_to_lost" cannot be applied from state "won"',
+            'from winner to defeated' => [
+                'from' => Player::STATE_WINNER,
+                'to' => Player::TRANSITION_DEFEATED,
+                'expectedState' => Player::STATE_WINNER,
+                'expectedExceptionMessage' => 'Transition "send_to_defeated" cannot be applied from state "winner"',
             ],
-            'from lost to won' => [
-                'from' => Player::STATE_LOST,
-                'to' => Player::TRANSITION_WON,
-                'expectedState' => Player::STATE_LOST,
-                'expectedExceptionMessage' => 'Transition "send_to_won" cannot be applied from state "lost"',
+            'from defeated to winner' => [
+                'from' => Player::STATE_DEFEATED,
+                'to' => Player::TRANSITION_WINNER,
+                'expectedState' => Player::STATE_DEFEATED,
+                'expectedExceptionMessage' => 'Transition "send_to_winner" cannot be applied from state "defeated"',
             ],
         ];
     }
