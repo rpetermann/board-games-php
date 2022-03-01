@@ -13,8 +13,14 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class KernelRequestSubscriber implements EventSubscriberInterface
 {
     const ALLOWED_ROUTES_WITHOUT_TOKEN = [
-        '/ping',
-        '/v1/game',
+        [
+            'method' => 'GET',
+            'uri' => '/ping',
+        ],
+        [
+            'method' => 'POST',
+            'uri' => '/v1/game',       
+        ],
     ];
     const TOKEN_FILTER_PARAMETER = 'token_filter';
     const HEADER_TOKEN_PARAMETER = 'access-token';
@@ -53,7 +59,7 @@ class KernelRequestSubscriber implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        if (!$this->isRouteRequiringValidation($request->getRequestUri())) {
+        if (!$this->isRouteRequiringValidation($request->getMethod(), $request->getRequestUri())) {
             $this->em->getFilters()->disable(self::TOKEN_FILTER_PARAMETER);
 
             return;
@@ -71,11 +77,18 @@ class KernelRequestSubscriber implements EventSubscriberInterface
     /**
      * isRouteRequiringValidation
      *
+     * @param string $method
      * @param string $uri
      * @return boolean
      */
-    protected function isRouteRequiringValidation(string $uri): bool
+    protected function isRouteRequiringValidation(string $method, string $uri): bool
     {
-        return !in_array($uri, self::ALLOWED_ROUTES_WITHOUT_TOKEN);
+        foreach(self::ALLOWED_ROUTES_WITHOUT_TOKEN as $route) {
+            if ($method === $route['method'] && $uri === $route['uri']) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }
