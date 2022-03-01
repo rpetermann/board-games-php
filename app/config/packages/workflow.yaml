@@ -38,8 +38,8 @@ framework:
                 - waiting_start
                 - waiting_play
                 - waiting_opponent_play
-                - won
-                - lost
+                - winner
+                - defeated
             transitions:
                 send_to_waiting_start:
                     from: creating
@@ -50,9 +50,9 @@ framework:
                 send_to_waiting_opponent_play:
                     from: [ waiting_play, waiting_start ]
                     to: waiting_opponent_play
-                send_to_won:
+                send_to_winner:
                     from: [ waiting_play, waiting_opponent_play ]
-                    to: won
-                send_to_lost:
+                    to: winner
+                send_to_defeated:
                     from: [ waiting_play, waiting_opponent_play ]
-                    to: lost
+                    to: defeated

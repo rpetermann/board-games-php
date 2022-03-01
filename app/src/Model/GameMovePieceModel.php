@@ -127,7 +127,7 @@ class GameMovePieceModel extends AbstractModel
         $game = $player->getGame();
 
         if ($game->isFinished()) {
-            return $player->hasPieces() ? Player::TRANSITION_WON : Player::TRANSITION_LOST;
+            return $player->hasPieces() ? Player::TRANSITION_WINNER : Player::TRANSITION_DEFEATED;
         }
 
         $playerFinishedTurn = $player->isTurn();
