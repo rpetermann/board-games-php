@@ -11,4 +11,4 @@ then
     boardgamesnetwork
 fi
 
-(cd server/ && exec docker-compose -p "board-games-php" ${@})
+(cd config/server && exec docker-compose -p "board-games-php" ${@})

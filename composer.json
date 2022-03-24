@@ -11,6 +11,7 @@
         "doctrine/doctrine-bundle": "^2.5",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.11",
+        "escapestudios/symfony2-coding-standard": "3.x-dev",
         "phpunit/phpunit": "^9.5",
         "ramsey/uuid-doctrine": "^1.8",
         "stof/doctrine-extensions-bundle": "^1.7",
@@ -63,6 +64,10 @@
     },
     "scripts": {
         "auto-scripts": {
+            "make cache-warmup": "script",
+            "assets:install --symlink --relative %PUBLIC_DIR%": "symfony-cmd",
+            "vendor/bin/phpcs --config-set installed_paths vendor/escapestudios/symfony2-coding-standard": "script",
+            "cp ./config/pre-commit .git/hooks/": "script",
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },

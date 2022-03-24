@@ -16,6 +16,7 @@ RUN apt-get update \
     nano \
     composer \
     git \
+    make \
  && rm -rf /var/lib/apt/lists/* 
  
 #Installing all dependencies
