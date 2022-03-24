@@ -25,11 +25,11 @@ class GameMovePieceModel extends AbstractModel
     /**
      * __construct
      *
-     * @param ManagerRegistry  $registry
-     * @param WorkflowService  $workflow
-     * @param GameRule         $gameRule
-     * @param PlayerFactory    $playerFactory
-     * @param HistoryFactory   $historyFactory
+     * @param ManagerRegistry $registry
+     * @param WorkflowService $workflow
+     * @param GameRule        $gameRule
+     * @param PlayerFactory   $playerFactory
+     * @param HistoryFactory  $historyFactory
      */
     public function __construct(ManagerRegistry $registry, WorkflowService $workflow, GameRule $gameRule, PlayerFactory $playerFactory, HistoryFactory $historyFactory)
     {
@@ -100,7 +100,6 @@ class GameMovePieceModel extends AbstractModel
         }
         
         $this->workflow->changeStatus(Game::TRANSITION_FINISHED, $game);
-
     }
 
     /**

@@ -104,7 +104,7 @@ class CheckersHandler extends AbstractGameHandler
 
         for ($row = 0; $row < $this->getPiecesRows(); ++$row) {
             for ($column = 0; $column < $this->getBoardColumns(); ++$column) {
-                $rowPosition = $player->isFirstPlayer() ? self::FIRST_PLAYER_ROW_START_POSITION : SELF::SECOND_PLAYER_ROW_START_POSITION;
+                $rowPosition = $player->isFirstPlayer() ? self::FIRST_PLAYER_ROW_START_POSITION : self::SECOND_PLAYER_ROW_START_POSITION;
                 $rowPosition += $row;
 
                 $isPieceOnEvenPosition = $this->isSumOfValuesEven($rowPosition, $column);
@@ -115,7 +115,7 @@ class CheckersHandler extends AbstractGameHandler
                 $piece = $this->pieceFactory->make([
                     'x' => $rowPosition,
                     'y' => $column,
-                    'type' => CheckersDefaultPieceHandler::TYPE
+                    'type' => CheckersDefaultPieceHandler::TYPE,
                 ]);
 
                 $pieces[] = $piece;

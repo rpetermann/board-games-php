@@ -19,7 +19,7 @@ class KernelRequestSubscriber implements EventSubscriberInterface
         ],
         [
             'method' => 'POST',
-            'uri' => '/v1/game',       
+            'uri' => '/v1/game',
         ],
     ];
     const TOKEN_FILTER_PARAMETER = 'token_filter';
@@ -65,7 +65,7 @@ class KernelRequestSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $token = $request->headers->get(seLf::HEADER_TOKEN_PARAMETER);
+        $token = $request->headers->get(self::HEADER_TOKEN_PARAMETER);
         if (empty($token)) {
             throw new AccessDeniedHttpException('This action needs a valid token!');
         }
@@ -83,7 +83,7 @@ class KernelRequestSubscriber implements EventSubscriberInterface
      */
     protected function isRouteRequiringValidation(string $method, string $uri): bool
     {
-        foreach(self::ALLOWED_ROUTES_WITHOUT_TOKEN as $route) {
+        foreach (self::ALLOWED_ROUTES_WITHOUT_TOKEN as $route) {
             if ($method === $route['method'] && $uri === $route['uri']) {
                 return false;
             }

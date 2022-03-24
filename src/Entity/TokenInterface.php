@@ -7,5 +7,10 @@ namespace App\Entity;
  */
 interface TokenInterface
 {
+    /**
+     * getAccessToken
+     *
+     * @return string
+     */
     public function getAccessToken(): string;
 }

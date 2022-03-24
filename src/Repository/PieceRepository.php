@@ -12,6 +12,11 @@ use Doctrine\ORM\Query\Expr\Join;
  */
 class PieceRepository extends AbstractRepository
 {
+    /**
+     * __construct
+     *
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Piece::class);

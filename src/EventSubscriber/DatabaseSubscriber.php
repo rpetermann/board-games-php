@@ -75,5 +75,5 @@ class DatabaseSubscriber implements EventSubscriberInterface
         if ($errors->count()) {
             throw ValidatorException::fromValidationError((string) $errors);
         }
-    }    
+    }
 }

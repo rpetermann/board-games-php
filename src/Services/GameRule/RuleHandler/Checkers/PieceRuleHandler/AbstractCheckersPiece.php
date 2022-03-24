@@ -49,9 +49,10 @@ abstract class AbstractCheckersPiece implements PieceHandlerInterface
     abstract public function getType(): string;
 
     /**
-     * getAllowedPieceMoves
+     * Undocumented function
      *
-     * @param Piece $piece
+     * @param Piece   $piece
+     * @param SlotDto ...$boardSlots
      * @return Collection<int, SlotDto>
      */
     public function getAllowedPieceMoves(Piece $piece, SlotDto ...$boardSlots): Collection
@@ -64,7 +65,7 @@ abstract class AbstractCheckersPiece implements PieceHandlerInterface
 
             try {
                 $this->validate($piece, $slotPositionX, $slotPositionY);
-            } catch(Throwable $th) {
+            } catch (Throwable $th) {
                 continue;
             }
 

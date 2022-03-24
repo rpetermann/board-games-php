@@ -20,6 +20,6 @@ class TokenFilter extends SQLFilter
             return "";
         }
 
-        return $targetTableAlias.'.access_token = ' . $this->getParameter('token');
+        return $targetTableAlias.'.access_token = '.$this->getParameter('token');
     }
 }

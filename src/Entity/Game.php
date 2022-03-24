@@ -78,7 +78,7 @@ class Game extends AbstractEntity implements WorkflowableInterface, TokenInterfa
      */
     public function __construct()
     {
-        $this->state = self::STATE_WAITING_PLAYERS; 
+        $this->state = self::STATE_WAITING_PLAYERS;
         $this->player = new ArrayCollection();
         $this->history = new ArrayCollection();
         $this->accessToken = Uuid::v4();

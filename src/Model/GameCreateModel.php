@@ -30,12 +30,12 @@ class GameCreateModel extends AbstractModel
     /**
      * __construct
      *
-     * @param ManagerRegistry  $registry
-     * @param WorkflowService  $workflow
-     * @param GameRule         $gameRule
-     * @param PlayerFactory    $playerFactory
-     * @param GameFactory      $gameFactory
-     * @param BoardFactory     $boardFactory
+     * @param ManagerRegistry $registry
+     * @param WorkflowService $workflow
+     * @param GameRule        $gameRule
+     * @param PlayerFactory   $playerFactory
+     * @param GameFactory     $gameFactory
+     * @param BoardFactory    $boardFactory
      */
     public function __construct(ManagerRegistry $registry, WorkflowService $workflow, GameRule $gameRule, PlayerFactory $playerFactory, GameFactory $gameFactory, BoardFactory $boardFactory)
     {

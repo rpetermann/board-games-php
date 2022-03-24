@@ -90,7 +90,8 @@ class GameController extends AbstractController
     /**
      * read
      *
-     * @param string $gameId
+     * @param string         $gameId
+     * @param GameRepository $gameRepository
      * @return JsonResponse
      */
     public function read(string $gameId, GameRepository $gameRepository): JsonResponse

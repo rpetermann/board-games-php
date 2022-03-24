@@ -37,7 +37,7 @@ interface PieceHandlerInterface
     /**
      * getAllowedPieceMoves
      *
-     * @param Piece $piece
+     * @param Piece   $piece
      * @param SlotDto ...$boardSlots
      * @return Collection<int, SlotDto>
      */

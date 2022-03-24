@@ -5,6 +5,9 @@ namespace App\Repository;
 use App\Entity\Player;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * PlayerRepository
+ */
 class PlayerRepository extends AbstractRepository
 {
     /**

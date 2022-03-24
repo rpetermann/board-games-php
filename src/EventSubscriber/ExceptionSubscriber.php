@@ -39,7 +39,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::EXCEPTION => [
-                ['onKernelException']
+                ['onKernelException'],
             ],
         ];
     }

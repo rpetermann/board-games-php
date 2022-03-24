@@ -17,7 +17,7 @@ abstract class AbstractException extends Exception
     /**
      * __construct
      *
-     * @param string $message
+     * @param string       $message
      * @param integer|null $code
      */
     public function __construct(string $message, ?int $code = null)

@@ -8,12 +8,12 @@ namespace App\Dto;
 class SlotDto
 {
     /**
-     * @var integer
+     * @var int
      */
     protected $x;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $y;
 

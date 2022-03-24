@@ -17,6 +17,11 @@ use Doctrine\Common\Collections\Collection;
 class GameRule
 {
     /**
+     * @var GameHandlerInterface[]
+     */
+    protected $handlers;
+
+    /**
      * __construct
      *
      * @param PieceRule $pieceRule
@@ -25,11 +30,6 @@ class GameRule
     {
         $this->pieceRule = $pieceRule;
     }
-
-    /**
-     * @var GameHandlerInterface[]
-     */
-    protected $handlers;
 
     /**
      * addHandler
@@ -115,7 +115,7 @@ class GameRule
     /**
      * movePiece
      *
-     * @param Piece $piece
+     * @param Piece   $piece
      * @param integer $toX
      * @param integer $toY
      * @return Piece

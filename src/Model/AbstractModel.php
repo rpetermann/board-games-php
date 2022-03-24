@@ -60,11 +60,10 @@ abstract class AbstractModel
     /**
      * __construct
      *
-     * @param  ManagerRegistry $registry
-     * @param  WorkflowService $workflow;
-     * @param  GameRule        $gameRule
-     * @param  PlayerFactory   $playerFactory
-     * @return void
+     * @param ManagerRegistry $registry
+     * @param WorkflowService $workflow
+     * @param GameRule        $gameRule
+     * @param PlayerFactory $playerFactory
      */
     public function __construct(ManagerRegistry $registry, WorkflowService $workflow, GameRule $gameRule, PlayerFactory $playerFactory)
     {
@@ -111,6 +110,19 @@ abstract class AbstractModel
     }
 
     /**
+     * createHistory
+     *
+     * @param Game $game
+     * @return History
+     */
+    public function createHistory(Game $game): History
+    {
+        $historyDto = new HistoryDto($game);
+
+        return $this->historyFactory->make($historyDto);
+    }
+
+    /**
      * createPlayer
      *
      * @param array     $payload
@@ -122,18 +134,5 @@ abstract class AbstractModel
         $countPlayersInGame = empty($game) ? 0 : $game->countPlayers();
 
         return $this->playerFactory->make($payload, $countPlayersInGame);
-    }
-
-    /**
-     * createHistory
-     *
-     * @param Game $game
-     * @return History
-     */
-    public function createHistory(Game $game): History
-    {
-        $historyDto = new HistoryDto($game);
-
-        return $this->historyFactory->make($historyDto);
     }
 }

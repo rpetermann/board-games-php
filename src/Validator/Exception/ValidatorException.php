@@ -13,10 +13,9 @@ class ValidatorException extends Exception
     const VALIDATION_FAILED = 'Validation failed with errors %s';
 
     /**
-     * Undocumented function
+     * fromValidationError
      *
-     * @param string $transition
-     * @param string $from
+     * @param string $errors
      * @return void
      */
     public static function fromValidationError(string $errors)
